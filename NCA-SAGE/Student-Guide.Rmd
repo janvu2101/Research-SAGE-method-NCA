@@ -1,0 +1,21 @@
+---
+title: "SAGE Research Methods Datasets"
+subtitle: "Learn about Necessary Condition Analysis (NCA) using R"
+output: word_document
+monofont: 'Consolas'
+---
+
+Contributor: Uyen Vu, Sina Behzadifard
+
+Method: Necessary Condition Analysis (NCA)
+
+Keywords: NCA, necessary condition, necessity
+
+Discipline: Business and Management
+
+\newpage
+# **STUDENT GUIDE**
+# Abstract
+
+# Introduction
+
