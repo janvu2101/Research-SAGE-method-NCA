@@ -9,7 +9,7 @@ Contributor: Uyen Vu, Sina Behzadifard
 
 Method: Necessary Condition Analysis (NCA)
 
-Keywords: NCA, necessary condition, necessity
+Keywords: NCA, necessary condition, necessity logic
 
 Discipline: Business and Management
 

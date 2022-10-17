@@ -1,0 +1,214 @@
+---
+title: 'Necessary Condition Analysis: in the context of Business Administration'
+author: "Sina Behzadifard and Uyen To Vu"
+date: "2022-10-09"
+output: pdf_document
+---
+
+```{r setup, include=FALSE, echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+
+#install the required docuement and load the library
+#install.packages("NCA") #install the NCA package
+library (NCA) #load the NCA package
+library(tidyverse)
+library(readr)
+library(knitr)
+library(plotly)
+
+```
+
+------------------------------------------------------------------------
+
+# How-to Guide
+
+## Introduction
+
+This document aims to provide a step-by-step guide for learning Necessary Condition Analysis(NCA) in R. The dataset used in this document is an open dataset published by Bloom et al. (2015) in the Journal of American Economic Review . Their research found that private equity firms are managed better than government, family, and privately owned firms. They also found significant positive relationships between private equity-owned firms and operations, monitoring, targets, and incentives management practices. In the following, we test the same relationships under necessary condition analysis logic and data analysis based on Dul's (2016 ) step-wise approach for continuous and discrete variables with a larger number of levels. A few requirements need to be satisfied before proceeding to the next step. The requirements and the link for more information are as follows:
+
+1.  Downloading and Installing RStudio Desktop(Open Source Edition): [Link](https://www.rstudio.com/products/rstudio/#rstudio-desktop)
+2.  Downloading data file: [Link](https://www.aeaweb.org/articles?id=10.1257/aer.p20151000)
+3.  How to change working directories in R: [Link](https://support.rstudio.com/hc/en-us/articles/200711843-Working-Directories-and-Workspaces-in-the-RStudio-IDE)
+
+##Description of the Data
+
+The dataset was stored in a CSV file named petopost.csv with other files published by Bloom et al. (2015).
+
+##Dataset
+
+**Title**: Replication data for Do Private Equity Owned Firms Have Better Management Practices?
+
+**Citation**: Bloom, Nicholas, Sadun, Raffaella, and Van Reenen, John. Replication data for: Do Private Equity Owned Firms Have Better Management Practices? Nashville, TN: American Economic Association [publisher], 2015. Ann Arbor, MI: Inter-university Consortium for Political and Social Research [distributor], 2019-10-12.
+
+[Link to the dataset](https://www.openicpsr.org/openicpsr/project/113354/version/V1/view)
+
+[DOI](https://doi.org/10.3886/E113354V1)
+
+------------------------------------------------------------------------
+
+## Contents
+
+1.  Importing Data
+2.  Data Cleaning
+3.  Introduction to NCA in R
+4.  The Final Project
+5.  References
+
+------------------------------------------------------------------------
+
+## 1. Importing Data
+
+Now, let's go through the process of importing the data in R. The downloaded file from [the link](https://www.aeaweb.org/articles?id=10.1257/aer.p20151000) is a zip file and you need to unzip the file and find a CSV file, named, `petopost.csv`. The following code allows us to read the CSV file and load it in an object called **petopost**.
+
+```{r importing data,echo=TRUE, results='asis', message = FALSE, error = FALSE, warning= FALSE}
+
+#load the data
+petopost <- read_csv("petopost.csv")
+
+#data dimensions
+dim(petopost)
+
+```
+
+The dataset has 44 columns and 15038 rows, which makes it hard to view it. Next, we slice the main dataset to shape our interested dataset. We store the selected data in an object called df. We are interested in private equity (PE) firms and their management practices. We, first, slice the dataset to select the PE firms:
+
+```{r Viewing the dataset,echo=TRUE, results='asis', message = FALSE, error = FALSE, warning= FALSE}
+
+df <- petopost[petopost$ownership == "Private Equity",]
+
+```
+
+## 2. Data Cleaning
+
+```{r - Filter Private Equity Firms , echo=FALSE}
+
+
+```
+
+## 3. Introduct to NCA in R
+
+(Dul, 2015)
+
+Steps for Continuous Variables.
+
+```{r}
+
+```
+
+### Step 1: Make Scatter plot
+
+The first step in NCA is to plot a scatter plot to better understand the relationship between the factor and outcome. In R, there are many different libraries to plot data.
+
+```{r first plot,echo=FALSE, results='asis', message = FALSE, error = FALSE, warning= FALSE }
+
+# Scatter plot 1: "zallops" and "zmanagement"
+
+plot(df$zallops, df$zmanagement, main="Scatter plot",   xlab="zallops", ylab="zmanagement", col = "red", pch = 19)
+
+```
+
+''
+
+```{r ,echo=FALSE, results='asis', message = FALSE, error = FALSE, warning= FALSE }
+
+# Scatter plot 2: "zorg_demand" and "zmanagement"
+
+plot(df$zorg_demand, df$zmanagement, main="Scatter plot",   xlab="zorg_demand", ylab="zmanagement",col = "blue", pch = 19)
+
+```
+
+### Step 2: Identify Empty Space
+
+```{r first plot empty space,echo=FALSE, results='asis', message = FALSE, error = FALSE, warning= FALSE }
+
+# Scatter plot 1: "zallops" and "zmanagement"
+
+plot(df$zallops, df$zmanagement, type = "p", main="Scatter plot",   xlab="zallops", ylab="zmanagement", col = "red", pch = 19)
+abline(a = 1.3 , b = 1.2, col="blue")
+
+```
+
+```{r second plot empty space}
+# Scatter plot 2: "zorg_demand" and "zmanagement"
+
+plot(df$zorg_demand, df$zmanagement, main="Scatter plot",   xlab="zorg_demand", ylab="zmanagement",col = "blue", pch = 19)
+
+abline(a =2.4, b = 0.07, col="red")
+
+
+```
+
+### Step 3: Draw Ceiling Line with NCA library
+
+```{r zallops ceiling, echo=TRUE}
+
+model_zallops<-NCA::nca_analysis(df,"zallops" , "zmanagement", ceilings=c("ce_fdh", "cr_fdh"))
+NCA::nca_output(model_zallops, plots = TRUE, summaries = FALSE)
+```
+
+First
+
+```{r plot model_zallops, echo=TRUE}
+
+model_zorgdemand <- nca_analysis(df,"zorg_demand" , "zmanagement", ceilings=c("ce_fdh", "cr_fdh"))
+NCA::nca_output(model_zorgdemand, plots = TRUE, summaries = FALSE)
+
+```
+
+Second
+
+### Step 4: Quantify NCA Parameters
+
+```{r - Quantify NCA Parameters - model_zallops , echo=TRUE}
+
+#Ceiling Zone: Calculate the size of the "empty space"
+
+NCA::nca_output(model_zallops, summaries = TRUE)
+
+```
+
+```{r - Quantify NCA Parameters - model_zorgdemand , echo=TRUE}
+
+#Ceiling Zone: Calculate the size of the "empty space"
+NCA::nca_output(model_zorgdemand, summaries = TRUE)
+
+```
+
+### Step 5: Evaluate Effect Size and Accuracy
+
+```{r - Evaluate Effect Size and Accuracy}
+
+NCA::nca_output(model_zallops, summaries = TRUE)
+
+```
+
+------------------------------------------------------------------------
+
+### Step 6: Formulate the Necessary Condition
+
+There are two approaches to formulate the necessary condition:
+
+1.  X is **necessary** for Y.
+
+2.  X is **necessary**, but **not sufficient** for Y.
+
+In addition, necessary condition can be formulated by the ceiling line:
+
+3.  Y~c~= aX~c~+ b
+
+Try yourself
+
+```{r}
+
+
+
+
+#plot(pe_firms$ztargets, pe_firms$zmanagement, main="Scatter plot",   xlab="ztargets", ylab="zmanagement", col = "green", pch = 19)
+#plot(pe_firms$zpeople, pe_firms$zmanagement, main="Scatter plot",   xlab="zpeople", ylab="zmanagement", col = "black", pch = 19)
+#plot(pe_firms$zorg_inputs, pe_firms$zmanagement, main="Scatter plot",   xlab="zorg_inputs", ylab="zmanagement", col = "purple", pch = 19)
+
+
+
+
+
+```
