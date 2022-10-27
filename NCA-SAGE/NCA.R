@@ -7,7 +7,10 @@ dim(df)
 str(df)
 View(df)
 unique(df$ownership)
-df <- df[df$ownership=="Private Equity", ]
+df_pri <- df[df$ownership=="Private Equity", ]
+df_gov <- df[df$ownership=="Government", ]
+
+dim(df_pri)
 
 df_private <- df_private[ , c("ownership","zmanagement","ztargets","zpeople","zallops","zorg_inputs","zorg_demand")]
 View(df_private)
@@ -28,6 +31,16 @@ plot(df$zpeople, df$zmanagement, main="Scatter plot",   xlab="zpeople", ylab="zm
 abline(a =2.4, b = 0.07, col="red")
 
 #NCA
+nca_pri1 <- nca_analysis(df_pri, "zallops", "zpeople", ceilings = c("ce_fdh","cr_fdh"), test.rep = 10000)
+nca_pri2 <- nca_analysis(df_pri, "zorg_inputs", "zpeople", ceilings = c("ce_fdh","cr_fdh"), test.rep = 10000)
+
+
+
+nca_output(nca_pri1, summaries = TRUE)
+nca_output(nca_pri2, summaries = TRUE)
+
+
+
 nca_zallops<-nca_analysis(df,"zallops", "zmanagement", ceilings=c("ce_fdh", "cr_fdh"), test.rep = 10000)
 nca_output(nca_zallops, summaries = TRUE)
 nca_output(nca_zallops, bottlenecks = TRUE, summaries = FALSE)
